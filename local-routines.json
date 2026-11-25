@@ -1,0 +1,12 @@
+{
+  "uptime": {
+    "program": "/usr/bin/uptime",
+    "cwd": "/",
+    "args": []
+  },
+  "espaco-disco": {
+    "program": "/bin/df",
+    "cwd": "/",
+    "args": ["-h", "/"]
+  }
+}

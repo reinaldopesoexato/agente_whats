@@ -1,0 +1,15 @@
+**
+!/*.js
+!package.json
+!package-lock.json
+!local-routines.json
+!public/
+!public/**
+!control/
+!control/**
+!Dockerfile
+*.test.js
+control/*.test.js
+
+**/__pycache__/
+**/*.pyc

@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>WhatsIA · Portal</title>
+  <link rel="stylesheet" href="/portal.css">
+</head>
+<body>
+  <svg class="symbols" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <defs>
+      <symbol id="i-brand" viewBox="0 0 64 64"><path d="M18 16h28a5 5 0 0 1 5 5v21a5 5 0 0 1-5 5H30l-12 6v-6a5 5 0 0 1-5-5V21a5 5 0 0 1 5-5Z" stroke-width="3"/><path d="M32 21c1.4 7 3 8.6 10 10-7 1.4-8.6 3-10 10-1.4-7-3-8.6-10-10 7-1.4 8.6-3 10-10Z" fill="currentColor" stroke="none"/></symbol>
+      <symbol id="i-grid" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></symbol>
+      <symbol id="i-users" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5"/><path d="M2 21v-2a7 7 0 0 1 14 0v2m1-16a3.5 3.5 0 0 1 0 7m2 3a6 6 0 0 1 3 5"/></symbol>
+      <symbol id="i-disk" viewBox="0 0 24 24"><ellipse cx="12" cy="5.5" rx="8" ry="3.5"/><path d="M4 5.5v13c0 4.6 16 4.6 16 0v-13M4 12c0 4.6 16 4.6 16 0"/></symbol>
+      <symbol id="i-skills" viewBox="0 0 24 24"><path d="M5 6h14M5 12h14M5 18h14"/><path d="M9 3v6m6 0v6m-7 0v6" stroke-width="3.5"/></symbol>
+      <symbol id="i-ai" viewBox="0 0 24 24"><path d="m12 3 2.3 6.7L21 12l-6.7 2.3L12 21l-2.3-6.7L3 12l6.7-2.3Z"/></symbol>
+      <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M4 12h15m-6-6 6 6-6 6"/></symbol>
+      <symbol id="i-exit" viewBox="0 0 24 24"><path d="M10 4H4v16h6m-1-8h12m-5-5 5 5-5 5"/></symbol>
+    </defs>
+  </svg>
+  <aside class="sidebar">
+    <div class="brand"><svg aria-hidden="true"><use href="#i-brand"/></svg>WhatsIA</div>
+    <nav id="nav" aria-label="Seções do painel" hidden>
+      <button data-page="overview"><svg><use href="#i-grid"/></svg>Visão geral</button>
+      <button data-page="admin" hidden><svg><use href="#i-users"/></svg>Usuários</button>
+      <button data-page="admin-skills" hidden><svg><use href="#i-skills"/></svg>Skills</button>
+      <button data-page="shared" hidden><svg><use href="#i-ai"/></svg>IA compartilhada</button>
+    </nav>
+    <div id="profile" hidden><span id="avatar" aria-hidden="true"></span><span id="identity"></span><button id="exit" aria-label="Sair do portal" title="Sair"><svg><use href="#i-exit"/></svg></button></div>
+  </aside>
+  <main>
+    <section id="login" class="auth panel" hidden><h1>Entrar no WhatsIA</h1><form id="credentials"><label>E-mail<input name="email" type="email" required autocomplete="username"></label><label>Senha<input name="password" type="password" required autocomplete="current-password"></label><button>Entrar</button></form><button id="recover" class="link">Primeiro acesso ou recuperação de senha</button></section>
+    <section id="reset" class="auth panel" hidden><h1>Definir senha</h1><form id="new-password"><label>Nova senha<input name="password" type="password" minlength="12" maxlength="256" required autocomplete="new-password"></label><small>Use pelo menos 12 caracteres.</small><button>Salvar senha</button></form></section>
+    <div id="dashboard" hidden>
+      <header><div><div id="scope"></div><h1 id="page-title" tabindex="-1">Visão geral</h1></div><button id="open">Abrir meu WhatsIA <svg><use href="#i-arrow"/></svg></button></header><p>Para instalar no celular, abra seu WhatsIA e toque em <strong>Contas → Instalar WhatsIA no celular</strong>.</p>
+      <section id="overview">
+        <div id="metrics"></div>
+        <div class="overview-grid">
+          <section id="storage" class="panel" hidden><div class="panel-head"><h2>Armazenamento por usuário</h2><button id="see-users" class="link">Ver usuários</button></div><div id="storage-list"></div></section>
+          <section id="account" class="workspace"><div class="workspace-icon"><svg><use href="#i-brand"/></svg></div><h2>Meu espaço</h2><p id="space-status"></p><div class="personal-storage"><div class="line"><span>Armazenamento</span><strong id="personal-percent"></strong></div><progress id="personal-bar" max="100" aria-label="Uso da minha cota"></progress><small id="usage"></small></div></section>
+        </div>
+      </section>
+      <section id="admin" class="panel" hidden>
+        <div class="panel-head"><h2>Contas de usuários</h2><button id="invite-toggle" aria-expanded="false" aria-controls="invite" hidden>Adicionar usuário</button></div>
+        <form id="invite" class="edit" hidden><label>E-mail do novo usuário<input type="email" name="email" required></label><button>Criar usuário</button></form>
+        <input id="search" type="search" placeholder="Buscar por e-mail" aria-label="Buscar usuário por e-mail">
+        <div id="users"></div>
+      </section>
+      <section id="admin-skills" class="panel" hidden><div class="panel-head"><h2>Skills administrativas</h2><button id="new-rule">Nova skill</button></div><p class="muted">As regras ativas se aplicam às novas mensagens de cada usuário.</p><div id="rule-list"></div>
+        <form id="rule-editor" class="edit" hidden><label>Nome<input name="name" required maxlength="100"></label>
+        <label>Grupo (opcional)<input name="group" maxlength="200" placeholder="Nome exato no WhatsApp"></label>
+        <label>Condição e informações a destacar<textarea name="instruction" rows="4" maxlength="4000" placeholder="Quando houver um atraso, destaque o pedido e o novo prazo."></textarea></label><small>Com um grupo definido, deixe a condição vazia para processar todas as mensagens dele.</small>
+        <label>Ação<select name="action"><option value="task">Criar tarefa</option><option value="summary">Gerar resumo</option><option value="draft">Preparar rascunho de resposta</option></select></label>
+        <label><input type="checkbox" name="active" checked> Ativa</label>
+        <div class="actions"><button type="submit">Salvar skill</button><button type="button" id="cancel-rule" class="secondary">Cancelar</button><button type="button" id="delete-rule" class="link danger">Excluir skill</button></div></form>
+      </section>
+      <section id="shared" class="panel" hidden><h2>Modelos e credenciais</h2><form id="defaults"></form></section>
+    </div>
+    <p id="feedback" role="status"></p>
+  </main>
+  <script src="/portal.js"></script>
+</body></html>

@@ -1,0 +1,26 @@
+{
+  "name": "whatsia",
+  "version": "0.1.0",
+  "private": true,
+  "bin": {
+    "whatsia": "cli.js",
+    "agente-whats": "cli.js"
+  },
+  "engines": {
+    "node": ">=22.13.0"
+  },
+  "scripts": {
+    "start": "node server.js",
+    "chromium:install": "browsers install chromium@latest --path .chromium"
+  },
+  "dependencies": {
+    "exceljs": "^4.4.0",
+    "express": "^5.1.0",
+    "mammoth": "^1.9.0",
+    "pdfjs-dist": "^5.4.0",
+    "puppeteer": "24.38.0",
+    "qrcode": "^1.5.4",
+    "web-push": "^3.6.7",
+    "whatsapp-web.js": "^1.34.0"
+  }
+}

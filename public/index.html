@@ -1,0 +1,359 @@
+<!doctype html>
+<html lang="pt-BR">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,interactive-widget=resizes-content"><title>WhatsIA</title><meta name="theme-color" content="#183a31"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="default"><link rel="apple-touch-icon" href="/pwa/icon-180.png"><link rel="manifest" href="/pwa/manifest.webmanifest" crossorigin="use-credentials"><script defer src="/pwa/install.js?v=2"></script><link rel="icon" type="image/svg+xml" href="whatsia.svg"><link rel="stylesheet" href="style.css?v=42"><script src="markdown.js" defer></script><script src="whatsapp-format.js?v=3" defer></script><script src="offline-chat.js?v=1"></script><script src="app.js?v=57" defer></script><script src="ai-settings.js?v=1" defer></script><script src="whatsapp-actions.js?v=1" defer></script><script src="browser-notifications.js?v=3" defer></script><link rel="stylesheet" href="media-viewer.css?v=2"><script src="media-viewer.js?v=1" defer></script></head>
+<body>
+<header><div class="app-brand"><button type="button" id="open-accounts" aria-haspopup="dialog" aria-controls="accounts-drawer"><svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h16M4 12h12M4 18h16"/></svg>Contas</button><strong class="app-wordmark"><img src="whatsia.svg" width="32" height="32" alt="">WhatsIA</strong></div><nav id="app-nav" aria-label="Navegação principal"><button id="today-tab"><svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="5.5" width="17" height="15" rx="2"/><path d="M7.5 3v5m9-5v5M4 11h16m-12 4h3"/></svg><span id="today-tab-label">Hoje</span></button><button id="chat-tab"><span class="chat-tab-icon"><svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 11.5a7.5 7.5 0 0 1-7.5 7.5H4l1.6-4A7.5 7.5 0 1 1 20 11.5Z"/><path d="M9 12h7"/></svg><span id="chat-tab-unread" role="img" hidden></span></span>Conversas</button><button id="ai-tab"><svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3c1.5 5.4 3.6 7.5 9 9-5.4 1.5-7.5 3.6-9 9-1.5-5.4-3.6-7.5-9-9 5.4-1.5 7.5-3.6 9-9Z"/></svg>I.A.</button><button id="people-tab"><svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="7.5" r="3.5"/><path d="M4.5 20v-1a7.5 7.5 0 0 1 15 0v1"/></svg>Pessoas</button><button type="button" id="more-tab" aria-expanded="false" aria-controls="extra-tabs"><svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M7.8 12h.1m4.05 0h.1m4.05 0h.1" stroke-width="2.8" stroke-linecap="round"/></svg>Mais</button><div id="extra-tabs"><button id="groups-tab"><svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3"/><path d="M3 20v-1a6 6 0 0 1 12 0v1m1-15a3 3 0 0 1 0 6m1 3a5 5 0 0 1 4 5v1"/></svg>Grupos</button><button id="skills-tab"><svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/><path stroke-width="4" d="M8 3v6m8 0v6m-6 0v6"/></svg>Skills</button><button type="button" id="archive-open"><svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="5" rx="1"/><path d="M5 9v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V9m-9 4h4"/></svg>Arquivo</button></div></nav></header>
+<div class="workspace">
+<main>
+<p id="error" role="alert" hidden></p>
+<section id="today-view" hidden>
+<div class="today-heading"><h1>Hoje</h1><time id="today-date"></time><label>Conta <select id="today-account"><option value="all">Todas as contas</option></select></label><button id="manage-categories" type="button" title="Organizar as categorias compartilhadas pelas contas">Organizar categorias</button></div>
+<form id="today-command" class="prompt-line"><input name="prompt" maxlength="4000" required aria-label="Ação em Hoje" placeholder="O que deseja organizar em Hoje?"><button aria-label="Executar ação" title="Executar ação"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m4 4 16 8-16 8 3-8-3-8zm3 8h12"/></svg></button></form><p id="today-result" role="status"></p>
+<div id="today-card-tools"></div>
+<div id="today-overview" aria-label="Resumo de hoje"></div>
+<div id="today-list"></div>
+<details id="hidden-categories" hidden><summary>Listas ocultas <span id="hidden-count"></span></summary><div id="hidden-category-list"></div></details>
+<details id="attachment-panel" hidden>
+<summary><span>Anexos com falha</span><span id="attachment-count" class="today-count"></span></summary>
+<div class="attachment-toolbar">
+<label>Tipo <select id="attachment-type"><option value="">Todos</option><option value="audio">Áudios</option><option value="image">Imagens</option><option value="document">Documentos</option></select></label>
+<label>Buscar <input id="attachment-search" type="search" maxlength="160" placeholder="Conta ou motivo da falha"></label>
+</div>
+<div id="attachment-issues"></div>
+<div class="attachment-pagination"><button type="button" id="attachment-prev">Anterior</button><span id="attachment-page" role="status"></span><button type="button" id="attachment-next">Próxima</button></div>
+</details>
+</section>
+<section id="chat-view">
+<div id="chat-directory-menu"><h1>Conversas</h1></div>
+<div id="session"></div>
+<div class="chat-layout">
+<aside class="chat-directory"><div class="chat-directory-head"><h2>Conversas</h2><label class="chat-account-picker">Contas <select id="chat-account-scope"></select></label><input id="chat-search" type="search" aria-label="Buscar conversas" placeholder="Buscar conversas"><select id="chat-filter" aria-label="Filtrar conversas"><option value="all">Todas</option><option value="unread">Não lidas</option><option value="groups">Grupos</option></select><div id="mobile-chat-filters" role="group" aria-label="Filtrar conversas"></div></div><p id="chat-list-status" role="status" hidden></p><div id="chats" aria-label="Conversas"></div></aside>
+<section id="thread" hidden>
+<div id="thread-header"><button type="button" id="chat-back" aria-label="Voltar às conversas"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 4-8 8 8 8"/></svg></button></div>
+<small id="offline-history" role="status" hidden></small>
+<div class="message-viewport">
+  <div id="messages" tabindex="0" aria-label="Mensagens da conversa"></div>
+  <div id="chat-history-bar" hidden>
+    <small id="older-status" role="status"></small>
+    <button type="button" id="history-retry" hidden>Tentar novamente</button>
+  </div>
+</div>
+<div id="message-actions" popover="auto" role="group" aria-label="Ações da mensagem"></div>
+<div id="message-selection" hidden aria-label="Mensagens selecionadas" role="toolbar">
+<span id="selection-count" role="status"></span><button type="button" id="selection-forward">Encaminhar</button>
+<button type="button" id="selection-delete">Apagar</button><button type="button" id="selection-clear">Cancelar seleção</button>
+</div>
+<form id="send">
+<details id="attach-menu"><summary aria-label="Anexar">＋</summary><div>
+<button type="button" id="attach-photos">Fotos e vídeos</button><button type="button" id="attach-files">Arquivos</button>
+</div></details>
+<input type="file" id="chat-files" multiple hidden>
+<textarea name="body" rows="1" placeholder="Digite uma mensagem" aria-label="Mensagem"></textarea>
+<button type="button" id="chat-camera" aria-label="Tirar foto"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" aria-hidden="true"><path d="M3 7.5h4l2-3h6l2 3h4v12H3z"/><circle cx="12" cy="13" r="3.5"/></svg></button>
+<input type="file" id="camera-file" accept="image/*" capture="environment" hidden>
+<button type="button" class="chat-icon-button" id="voice-record" title="Gravar áudio" aria-label="Gravar áudio">
+<svg class="voice-mic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 15a3 3 0 0 0 3-3V6a3 3 0 0 0-6 0v6a3 3 0 0 0 3 3Z M5 11v1a7 7 0 0 0 14 0v-1 M12 19v3 M9 22h6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+<svg class="voice-stop" viewBox="0 0 24 24" aria-hidden="true" hidden><rect x="6" y="6" width="12" height="12" rx="2" fill="currentColor"/></svg>
+</button>
+<button type="submit" class="chat-icon-button" id="chat-send" title="Enviar" aria-label="Enviar" hidden>
+<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M3.1 3.3 22 12 3.1 20.7l1.5-7.1L15 12 4.6 10.4l-1.5-7.1Z"/></svg>
+</button>
+<div id="wa-mention-list" aria-label="Participantes para mencionar" hidden></div>
+<p id="chat-composer-status" role="status" hidden></p>
+<section id="chat-preview" aria-label="Prévia dos anexos" hidden></section>
+</form>
+</section>
+</div>
+</section>
+<section id="ai-settings-view" hidden aria-labelledby="ai-settings-title">
+<h2 id="ai-settings-title" tabindex="-1">Configurações de IA</h2>
+<form id="ai-preferences">
+<fieldset><legend>Conversas IA</legend>
+<label>Provedor <select name="chatProvider"><option value="auto">Automático · Ollama e depois OpenAI</option><option value="local">Somente Ollama</option><option value="cloud">Somente OpenAI</option></select></label>
+<p>Quando a OpenAI é usada, ela recebe o prompt e o contexto selecionado, inclusive de várias contas.</p>
+<label>Modelo preferencial do Ollama <input name="chatLocalModel" list="ollama-models" required></label>
+<label>Modelo preferencial da OpenAI <input name="chatCloudModel" required></label>
+<label>Limite de tokens por resposta <input type="number" name="chatTokens" min="64" max="65536" required></label>
+<label>Espera por modelo (segundos) <input type="number" name="chatTimeout" min="5" max="600" required></label>
+</fieldset>
+<fieldset><legend>Mensagens automáticas e resumos</legend>
+<label>Modelo do Ollama <input name="autoLocalModel" list="ollama-models" required></label>
+<label>Modelo da OpenAI <input name="autoCloudModel" required></label>
+<label>Limite de tokens por resposta <input type="number" name="autoTokens" min="64" max="65536" required></label>
+</fieldset>
+<fieldset><legend>Pendências e fechamento diário</legend>
+<label>Nome usado para identificar suas pendências <input name="ownerNames" maxlength="160" required></label>
+<label>Horário de fechamento <input type="time" name="summaryTime" required></label>
+<label>Fuso horário <input name="summaryZone" placeholder="America/Sao_Paulo" required></label>
+</fieldset>
+<fieldset><legend>Credencial da OpenAI</legend>
+<p id="ai-key-state"></p>
+<label>Nova chave de API <input name="apiKey" type="password" autocomplete="new-password" spellcheck="false" maxlength="1024" placeholder="Cole uma chave para cadastrar ou substituir"></label>
+<label class="key-removal"><input name="removeKey" type="checkbox"> Remover a chave configurada</label>
+</fieldset>
+<details class="ai-media-settings"><summary>Imagens, áudio e documentos</summary>
+<fieldset><legend>Descrição e geração de imagens</legend>
+<label>Modelo visual do Ollama <input name="visionLocalModel" list="ollama-models" placeholder="Usar modelo automático"></label>
+<label>Modelo visual da OpenAI <input name="visionCloudModel" placeholder="Usar modelo automático"></label>
+<label>Modelo para gerar imagens <input name="imageModel" required></label>
+<label>Qualidade <select name="imageQuality"><option value="auto">Automática</option><option value="low">Baixa</option><option value="medium">Média</option><option value="high">Alta</option></select></label>
+<label>Tamanho <select name="imageSize"><option value="auto">Automático</option><option>1024x1024</option><option>1536x1024</option><option>1024x1536</option></select></label>
+</fieldset>
+<fieldset><legend>Áudio e PDF</legend>
+<label>Arquivo local do modelo Whisper <input name="whisperModel" placeholder="/caminho/modelo.bin"></label>
+<label>Idiomas do OCR <input name="ocrLanguages" required placeholder="por+eng"></label>
+</fieldset></details>
+<datalist id="ollama-models"></datalist>
+<div class="ai-pref-save"><button type="submit" disabled>Salvar configurações</button><button id="ai-inherit" type="button" hidden>Usar modelos padrão do sistema</button><span id="ai-pref-status" role="status"></span></div>
+</form>
+<section id="ai-account-controls" hidden><h3>Análise automática por conta</h3><div id="ai-account-modes"></div></section>
+</section>
+<section id="ai-view" hidden>
+<div class="ai-workbench">
+<nav class="ai-sidebar" aria-label="Conversas da I.A.">
+<h2>Conversas da I.A.</h2>
+<button id="new-ai-chat" type="button" class="ai-primary">＋ Nova conversa</button>
+<div class="selection-tools"><button id="select-threads" aria-pressed="false">Selecionar</button><button id="delete-threads" hidden>Apagar</button></div><div id="ai-chats"></div>
+<div class="ai-sidebar-tools"><button id="bulk-history" type="button">Processar histórico</button></div>
+</nav>
+<div id="sidebar-resize" role="separator" tabindex="0" aria-label="Largura de Conversas IA" aria-orientation="vertical"></div><section class="ai-main" aria-labelledby="ai-thread-title">
+<div class="ai-top"><h2 id="ai-thread-title">Nova conversa</h2><div id="ai-status" aria-live="polite"></div><div id="history-jobs" aria-live="polite" hidden></div></div>
+<div id="ask-response" class="ai-transcript" role="log" aria-label="Mensagens da I.A." aria-live="polite" tabindex="0"></div>
+<form id="ask-contexts" class="ai-composer">
+<details class="advanced"><summary>Opções avançadas</summary><div class="ai-composer-scope">
+<label>Conta <select name="account" required></select></label>
+<label>Contexto <select name="scope"><option value="all">Conta selecionada</option><option value="chat">Conversa aberta</option><option value="person" hidden>Pessoa selecionada</option><option value="accounts" selected>Todas as contas</option><option value="group" hidden>Grupo selecionado</option></select></label>
+<label>Skill <select name="skill"><option value="">Seleção automática</option><option value="off">Sem skill</option></select></label>
+</div>
+<div class="ai-composer-actions">
+<label class="remember-option"><input type="checkbox" name="remember"> Guardar na memória</label>
+<label class="remember-option"><input type="checkbox" name="includeDeleted"> Incluir cópias de mensagens apagadas</label>
+</div></details><small id="ask-mode"></small><div class="prompt-line"><textarea name="prompt" rows="2" maxlength="4000" required aria-label="Mensagem para a I.A." placeholder="Pergunte sobre suas conversas, pessoas ou pendências…"></textarea><button type="submit" class="ai-primary" aria-label="Enviar mensagem" title="Enviar"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m4 4 16 8-16 8 3-8-3-8zm3 8h12"/></svg></button></div>
+</form>
+</section>
+</div>
+<details class="ai-records"><summary>Pendências e resumos</summary>
+<h2>Pendências</h2><div id="actions"></div><h2>Resumos de feedback</h2><div id="summaries"></div><h2>Análises parciais</h2><div id="partial"></div></details>
+</section>
+<section id="people-view" hidden>
+<h2>Pessoas</h2>
+<div class="people-toolbar"><input id="people-search" type="search" aria-label="Buscar pessoas" placeholder="Buscar por nome, telefone, vínculo ou assunto"><button id="add-person">Cadastrar pessoa</button></div>
+<div id="people-list" aria-live="polite"></div>
+</section>
+<section id="groups-view" hidden>
+<h2>Grupos</h2>
+<div class="people-toolbar"><input id="groups-search" type="search" aria-label="Buscar grupos" placeholder="Buscar por grupo ou conta"></div>
+<div id="groups-list" aria-live="polite"></div>
+</section>
+<section hidden id="skills-view" aria-labelledby="skills-title">
+<div class="skills-heading"><h2 id="skills-title">Skills da I.A.</h2></div>
+<div class="people-toolbar"><input id="skill-search" type="search" aria-label="Buscar skills" placeholder="Buscar por nome ou instrução"><button type="button" id="new-skill">Nova skill</button><button type="button" id="new-wa-skill">Skill do WhatsApp</button></div>
+<div id="skills-list" aria-live="polite"></div>
+<section id="skill-proposals" aria-label="Skills aguardando aprovação" hidden></section>
+<form id="skill-form" hidden>
+<h3 id="skill-form-title">Nova skill</h3>
+<label>Nome <input name="name" maxlength="80" required></label>
+<label>Descrição <textarea name="description" maxlength="4000" rows="6" required placeholder="Descreva quando agir, o que fazer e para quem."></textarea></label>
+<div class="context-buttons"><button type="button" id="cancel-skill">Cancelar</button><button type="submit">Salvar skill</button></div>
+</form>
+<p id="skill-notice" role="status"></p>
+<details id="skill-activity"><summary>Execuções de skills</summary><div id="skill-runs"></div></details>
+</section>
+</main></div>
+<footer class="analysis-bar" aria-label="Análise de novas mensagens">
+<div class="analysis-bar-text" role="status">
+<strong>Análise automática</strong>
+<span id="analysis-queue-status">Carregando fila local…</span>
+</div>
+<div class="analysis-bar-controls">
+<button type="button" id="analysis-retry" hidden>Reprocessar falhas</button>
+<button type="button" id="analysis-toggle" aria-pressed="false" disabled>Pausar análise</button>
+</div>
+</footer>
+<dialog id="accounts-drawer" aria-labelledby="accounts-title">
+<div class="drawer-heading"><h2 id="accounts-title">Contas</h2><button type="button" id="close-accounts">Fechar</button></div>
+<button type="button" id="open-wa-actions">Ações do WhatsApp</button>
+<a id="portal-link" href="/_account" hidden>Minha conta e administração</a>
+<button type="button" id="open-ai-settings">Configurações de IA</button>
+<button type="button" id="install-app" hidden>Instalar WhatsIA no celular</button><small id="install-help" role="status"></small>
+<details id="notice-settings"><summary>Notificações neste aparelho</summary>
+<p><label><input type="checkbox" id="notice-messages"> Notificar mensagens recebidas</label></p>
+<label>Conversas <select id="notice-audience"><option value="all">Pessoas e grupos</option><option value="people">Somente pessoas</option><option value="groups">Somente grupos</option></select></label>
+<p><label><input type="checkbox" id="notice-cards"> Novos itens visíveis na conta selecionada em Hoje</label></p>
+<p><label><input type="checkbox" id="notice-quiet"> Silenciar som dos avisos</label></p>
+<p><label><input type="checkbox" id="notice-private"> Ocultar detalhes nos avisos</label></p>
+<button type="button" id="enable-background" hidden>Receber com o app fechado</button>
+<button type="button" id="notice-test" hidden>Testar notificação</button>
+<small id="notice-status" role="status"></small></details>
+<button type="button" id="mobile-logout" hidden>Sair deste aparelho</button>
+<div id="accounts"></div>
+<section id="account-settings" aria-label="Configurações da conta ativa" hidden></section>
+<form id="new-account"><input name="name" placeholder="Nome da conta" aria-label="Nome da conta" required><button>Vincular</button></form>
+</dialog>
+<dialog id="wa-dialog" aria-labelledby="wa-title">
+<form id="wa-form"><div class="drawer-heading"><h2 id="wa-title">Ações do WhatsApp</h2><button type="button" id="wa-close">Fechar</button></div>
+<label>Conta <select name="account" required></select></label>
+<label>Operação <select name="operation" required></select></label>
+<label id="wa-chat-label">Conversa ou canal <input name="chat" list="wa-chats" autocomplete="off" placeholder="Escolha pelo nome ou informe o ID"></label><datalist id="wa-chats"></datalist>
+<label id="wa-msg-label">Mensagem <input name="message" list="wa-msgs" placeholder="Escolha a mensagem ou informe o ID"></label><datalist id="wa-msgs"></datalist>
+<label id="wa-contact-label">Contato <input name="contact" placeholder="Telefone com DDI ou ID"></label>
+<div id="wa-fields"></div>
+<fieldset id="wa-skill-fields" hidden><legend>Skill</legend>
+<label>Nome <input name="skillName" maxlength="80"></label><label>Descrição <textarea name="descriptionSkill" maxlength="4000"></textarea></label>
+<label>Executar ao receber este texto exato <input name="trigger" maxlength="500" placeholder="Vazio para execução manual"></label>
+<label>Restringir ao remetente (ID) <input name="sender" placeholder="Opcional"></label>
+<small>O gatilho usa a conta e a conversa escolhidas. As ações de mensagem usam a mensagem que acionou o gatilho.</small>
+</fieldset>
+<div class="dialog-actions"><button type="button" id="wa-as-skill">Salvar como skill</button><button type="submit" id="wa-submit">Executar</button></div>
+<p id="wa-state" role="status"></p><div id="wa-output"></div>
+</form></dialog>
+<dialog id="chat-batch-dialog" aria-labelledby="chat-batch-title">
+<form id="chat-batch-form">
+<h2 id="chat-batch-title"></h2><p id="chat-batch-detail"></p>
+<label id="batch-delete-scope" hidden>Apagar <select name="deleteScope"><option value="delete">Para mim</option><option value="deleteEveryone">Para todos</option></select></label>
+<label id="chat-batch-destination">Conversa de destino <select name="destination"></select></label>
+<p id="chat-batch-status" role="status"></p>
+<div class="dialog-actions"><button type="button" id="chat-batch-close">Cancelar</button><button type="submit" id="chat-batch-confirm"></button></div>
+</form>
+</dialog>
+<dialog id="archive-dialog" aria-labelledby="archive-title">
+<div class="archive-heading"><h2 id="archive-title">Arquivo e atividade</h2><button type="button" id="archive-close" aria-label="Fechar arquivo">Fechar</button></div>
+<form id="archive-filter">
+<label>Visão <select name="view"><option value="deleted">Mensagens apagadas</option><option value="activity">Atividade</option></select></label>
+<label>Conta <select name="account"></select></label>
+<label>Conversa <input name="chat" placeholder="Nome da conversa"></label>
+<label>De <input type="date" name="start"></label>
+<label>Até <input type="date" name="end"></label>
+<label id="archive-kind" hidden>Atividade <select name="kind"><option value="">Todas</option><option value="archived">Arquivadas</option><option value="deleted">Apagadas</option><option value="transcribed">Transcritas</option><option value="corrected">Corrigidas</option><option value="sent">Enviadas</option></select></label>
+<div class="archive-filter-actions"><button type="submit" class="ai-primary">Aplicar filtros</button><button type="button" id="archive-clear">Limpar filtros</button></div>
+</form>
+<details><summary>Limpar mídias antigas</summary><form id="media-cleanup">
+<label>Conta <select name="account"><option value="">Todas as contas</option></select></label>
+<label>Tipo <select name="type"><option value="all">Todas as mídias</option><option value="image">Imagens</option><option value="video">Vídeos</option><option value="audio">Áudios</option><option value="document">Documentos e outros</option></select></label>
+<label>Mais antigas que <input name="days" type="number" min="1" max="36500" value="90" required> dias</label>
+<button type="submit">Calcular espaço</button><output id="clean-feedback" aria-live="polite"></output>
+<button type="button" id="clean-confirm" hidden>Confirmar exclusão das cópias locais</button></form></details>
+<p id="archive-usage" role="status"></p>
+<p id="archive-feedback" role="status"></p>
+<div id="archive-results" tabindex="0" aria-label="Resultados do arquivo"></div>
+<div class="dialog-actions"><button type="button" id="archive-prev">Anterior</button><span id="archive-page" aria-live="polite"></span><button type="button" id="archive-next">Próxima</button></div>
+</dialog>
+<dialog id="archive-settings-dialog" aria-labelledby="archive-settings-title">
+<form id="archive-settings-form">
+<h2 id="archive-settings-title">Arquivo da conversa</h2>
+<label><input type="checkbox" name="enabled"> Salvar mensagens e mídias desta conversa</label>
+<label>Retenção do texto em dias <input type="number" name="textDays" required min="0" max="3650"></label>
+
+<p>A retenção se aplica ao texto. As mídias podem ser removidas manualmente em Arquivo.</p>
+<p id="archive-settings-status" role="status"></p>
+<div class="dialog-actions"><button type="button" id="archive-settings-close">Fechar</button><button type="submit">Salvar</button></div>
+</form>
+</dialog>
+<dialog id="image-dialog" aria-labelledby="image-title">
+<form id="image-form">
+<h2 id="image-title">Gerar imagem</h2>
+<label>Destino no WhatsApp <select name="chat" required></select></label>
+<label>Descrição da imagem <textarea name="description" rows="3" maxlength="4000" required></textarea></label>
+<label>Legenda opcional <input name="caption" maxlength="1000"></label>
+<p>O modelo de imagem da OpenAI recebe a descrição. Você revisa a imagem antes do envio.</p>
+<p id="image-status" role="status"></p>
+<div class="dialog-actions"><button type="button" id="image-close">Fechar</button><button type="submit" class="ai-primary">Gerar rascunho</button></div>
+</form>
+</dialog>
+<dialog id="ai-chat-dialog" aria-labelledby="ai-chat-dialog-title">
+<form id="ai-chat-form">
+<h2 id="ai-chat-dialog-title"></h2>
+<p id="ai-chat-confirm" hidden></p>
+<label id="ai-chat-title-field">Nome da conversa <input name="title" maxlength="100" required></label>
+<p id="ai-chat-error" role="alert"></p>
+<div class="context-buttons"><button type="button" id="cancel-ai-chat">Cancelar</button><button type="submit" id="confirm-ai-chat"></button></div>
+</form>
+</dialog>
+<dialog id="group-dialog" aria-labelledby="group-title">
+<form id="group-form">
+<h2 id="group-title">Contexto do grupo</h2>
+<label>Nome no painel <input name="name" maxlength="120"></label>
+<label>Finalidade <textarea name="purpose" maxlength="1000" rows="2"></textarea></label>
+<label>Participantes e responsabilidades <textarea name="responsibilities" maxlength="1000" rows="2"></textarea></label>
+<label>Instruções para a I.A. <textarea name="instructions" maxlength="2000" rows="3"></textarea></label>
+<div id="group-accounts"></div><p id="group-error" role="alert"></p>
+<div class="context-buttons"><button type="button" id="close-group">Fechar</button><button type="submit">Salvar contexto do grupo</button></div>
+</form></dialog>
+<dialog id="bulk-dialog" aria-labelledby="bulk-title">
+<form id="bulk-form">
+<h2 id="bulk-title">Processar histórico</h2>
+<label>Dias anteriores <input name="days" type="number" min="1" max="3650" value="7" required></label>
+<p>Usa as contas conectadas com a I.A. ativa. No modo híbrido, os dados do período passam pela OpenAI.</p>
+<div class="context-buttons"><button type="button" id="close-bulk">Fechar</button><button type="submit">Processar e complementar contextos</button></div>
+</form>
+<p id="bulk-status" role="status"></p><div id="bulk-controls"></div><ul id="bulk-errors"></ul>
+</dialog>
+<dialog id="people-dialog" aria-labelledby="people-title">
+<form id="people-form">
+<h2 id="people-title">Perfil da pessoa</h2>
+<label>Nome <input name="name" maxlength="120"></label>
+<label>WhatsApp com código do país <input name="phone" type="tel" placeholder="+55 DDD número"></label>
+<label>Vínculo <select name="relationship"><option value="">A classificar</option><option>Cliente</option><option>Funcionário</option><option>Fornecedor</option><option>Parceiro</option><option>Contato pessoal</option><option>Outro</option></select></label>
+<label>Empresa ou organização <input name="organization" maxlength="160"></label>
+<label>Responsabilidades <textarea name="responsibilities" maxlength="1000" rows="2"></textarea></label>
+<label>Assuntos pessoais <textarea name="personalTopics" maxlength="1000" rows="2"></textarea></label>
+<label>Assuntos de empresa <textarea name="companyTopics" maxlength="1000" rows="2"></textarea></label>
+<label>Instruções específicas para a I.A. <textarea name="instructions" maxlength="2000" rows="3"></textarea></label>
+<div id="person-sources"></div>
+<p id="person-notice" role="status"></p>
+<div class="context-buttons"><button type="button" id="close-person">Fechar</button><button type="submit">Salvar perfil</button></div>
+</form>
+</dialog>
+
+<dialog id="context-dialog" aria-labelledby="context-title">
+<form id="context-form">
+<h2 id="context-title">Contexto da conversa</h2>
+<p id="context-chat"></p>
+<label>Finalidade<textarea name="purpose" maxlength="500" rows="2" placeholder="Ex.: Suporte técnico de balanças e do AviHub"></textarea></label>
+<label>Participantes e funções<textarea name="participants" maxlength="1000" rows="2" placeholder="Ex.: Carlos cuida de firmware. Reinaldo aprova envios."></textarea></label>
+<label>Produtos, siglas e apelidos<textarea name="vocabulary" maxlength="1000" rows="2" placeholder="Ex.: PS Plus é a balança de pesagem de aves."></textarea></label>
+<label>O que priorizar<textarea name="priorities" maxlength="1000" rows="2" placeholder="Ex.: Destacar cliente sem operar ou pedido de confirmação de entrega."></textarea></label>
+<h3>Memória recente</h3>
+<ul id="context-memory"></ul>
+<p id="context-error" role="alert" hidden></p>
+<div class="context-buttons"><button type="button" id="close-context">Fechar</button><button>Salvar contexto</button></div>
+</form>
+<section class="context-history">
+<h3>Gerar contexto pelo histórico</h3>
+<form id="history-form">
+<label>Período <select name="period"><option value="days">Últimos X dias</option><option value="all">Todo o histórico disponível</option></select></label>
+<label>Quantidade de dias <input type="number" name="days" min="1" max="3650" value="30" required></label>
+<p id="history-mode"></p><button>Gerar contexto</button>
+<button type="button" id="stop-history" hidden>Parar</button>
+</form>
+<p id="history-status" role="status"></p>
+<pre id="history-summary" hidden></pre>
+</section></dialog>
+<dialog id="category-manager" aria-labelledby="category-heading">
+<div class="skills-heading"><h2 id="category-heading">Categorias de Hoje</h2><button type="button" data-close>Fechar</button></div>
+<div id="category-order"></div>
+<button id="create-category" type="button">Nova categoria</button>
+<p role="status" id="category-order-status"></p>
+</dialog>
+<dialog id="category-editor" aria-labelledby="category-title">
+<form id="category-form"><h2 id="category-title">Editar categoria</h2>
+<label>Nome <input name="categoryName" maxlength="80" required></label>
+<label>Prompt da categoria <textarea name="rule" maxlength="1000" rows="3" placeholder="Agrupe mensagens que solicitem orçamento de peças."></textarea></label>
+<small>Descreva quais novas mensagens agrupar. Você pode escrever “Mensagens da Ana Souza”, “Mensagens do grupo Expedição” ou “Mensagens da Ana Souza sobre pagamentos”.</small>
+<label>Mostrar mensagens agrupadas <select name="days"><option value="0">De todos os dias</option><option value="1">Somente de hoje</option><option value="7">Dos últimos 7 dias</option><option value="30">Dos últimos 30 dias</option><option value="90">Dos últimos 90 dias</option></select></label>
+<label class="category-check"><input type="checkbox" name="showNotifications"> Mostrar notificações</label>
+<label class="category-check"><input type="checkbox" name="concealed"> Colocar em Listas ocultas</label>
+<p id="category-form-error" role="alert"></p>
+<div class="context-buttons"><button type="button" data-close>Cancelar</button><button type="submit">Salvar categoria</button></div>
+</form></dialog>
+<dialog id="category-history" aria-labelledby="category-history-title">
+<div class="skills-heading"><h2 id="category-history-title"></h2><button type="button" data-close>Fechar</button></div>
+<input type="search" id="category-history-search" class="today-list-search" aria-label="Filtrar histórico" placeholder="Filtrar mensagens…" maxlength="160"><div id="history-card-tools"></div><div id="category-history-items"></div><div class="attachment-pagination"><button id="category-prev">Anterior</button><span id="category-page" role="status"></span><button id="category-next">Próxima</button></div>
+</dialog>
+<dialog id="today-batch-dialog" aria-labelledby="today-batch-title"><form id="today-batch-form">
+<h2 id="today-batch-title"></h2><p id="today-batch-detail"></p>
+<label id="today-batch-target">Categoria de destino <select name="destination"></select></label>
+<p id="today-batch-error" role="alert"></p>
+<div class="dialog-actions"><button type="button" id="today-batch-cancel">Cancelar</button><button type="submit" id="today-batch-submit"></button></div>
+</form></dialog>
+<script src="/storage.js"></script></body></html>
